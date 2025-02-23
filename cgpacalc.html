@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRM CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+            color: white;
+        }
+        h2 {
+            color: #f4f4f4;
+        }
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background: #222;
+            font-size: 18px;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #777;
+            text-align: center;
+            color: white;
+        }
+        select, input {
+            padding: 8px;
+            width: 100%;
+            font-size: 16px;
+        }
+        .btn {
+            background: violet;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #a020f0;
+        }
+        .remove-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #result {
+            font-size: 22px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>SRM CGPA Calculator</h2>
+    
+    <table id="subjectsTable">
+        <tr>
+            <th>Subject</th>
+            <th>Credits</th>
+            <th>Grade</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <button class="btn" onclick="addSubject()">Add Subject</button>
+    <button class="btn" onclick="calculateCGPA()">Calculate CGPA</button>
+
+    <p id="result"></p>
+
+    <script>
+        function addSubject() {
+            let table = document.getElementById("subjectsTable");
+            let row = table.insertRow(-1);
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+
+            cell1.innerHTML = `<input type="text" placeholder="Subject Name">`;
+            cell2.innerHTML = `<input type="number" min="1" step="1" value="3">`;
+            cell3.innerHTML = `
+                <select>
+                    <option value="10">O</option>
+                    <option value="9">A+</option>
+                    <option value="8">A</option>
+                    <option value="7">B+</option>
+                    <option value="6">B</option>
+                    <option value="5">C</option>
+                    <option value="4">P</option>
+                    <option value="0">F</option>
+                </select>
+            `;
+            cell4.innerHTML = `<button class="remove-btn" onclick="removeSubject(this)">Remove</button>`;
+        }
+
+        function removeSubject(button) {
+            let row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function calculateCGPA() {
+            let table = document.getElementById("subjectsTable");
+            let rows = table.rows;
+            let totalCredits = 0, totalPoints = 0;
+
+            for (let i = 1; i < rows.length; i++) {
+                let credits = parseFloat(rows[i].cells[1].querySelector("input").value);
+                let grade = parseFloat(rows[i].cells[2].querySelector("select").value);
+
+                totalCredits += credits;
+                totalPoints += grade * credits;
+            }
+
+            let cgpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "N/A";
+            document.getElementById("result").innerHTML = `Your CGPA is: <strong>${cgpa}</strong>`;
+        }
+    </script>
+
+</body>
+</html>
